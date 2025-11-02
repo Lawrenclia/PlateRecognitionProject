@@ -21,7 +21,7 @@
 
 
 
-## 3.文件结构
+## 3.文件结构（暂定）
 ```
 PlateRecognition-Project/
 │
@@ -34,14 +34,14 @@ PlateRecognition-Project/
 │   └── recognize.pt           # LPRNet 识别模型
 │
 ├── core/                    # 核心 AI 逻辑
-│   ├── \_\_init_\_\.py
+│   ├── __init__.py
 │   ├── detector.py          # 封装 YOLOv8 推理的代码
 │   ├── recognizer.py        # 封装 LPRNet 推理的代码
 │   ├── lprnet_model.py      # LPRNet 的 PyTorch 模型定义
 │   └── lprnet_utils.py      # LPRNet 的 CTC 解码器和字符表
 │
 ├── gui/                     # PySide6 界面代码
-│   ├── \_\_init\_\_.py
+│   ├── __init__.py
 │   ├── main_window.py       # 定义 GUI 窗口、按钮和布局
 │   └── utils.py             # 包含 OpenCV/Numpy 转 QPixmap 的辅助函数
 │
