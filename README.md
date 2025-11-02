@@ -22,7 +22,7 @@
 
 
 ## 3.文件结构
-
+```
 PlateRecognition-Project/
 │
 ├── .gitignore                 
@@ -52,7 +52,7 @@ PlateRecognition-Project/
 ├── 大作业报告.pdf     
 └── 讲解视频.mp4               
 
-
+```
 
 ---
 
