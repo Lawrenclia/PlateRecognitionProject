@@ -6,7 +6,7 @@
 
 
 ## AI写的废话
-<font color = "red"> 其实用vs或者vscode来push很方便</font>
+这一句不是：<font color = "red"> **其实用vs或者vscode来push很方便**</font>
 
 ### 最核心的规则
 
