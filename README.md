@@ -6,13 +6,23 @@
 - 已经下载好的CCPD数据集交大云盘链接：
 > 链接: https://pan.sjtu.edu.cn/web/share/a4afb22d5d891684a71c27c5dfd4a398, 提取码: lnx3
 
+
+
+---
+
+
+
 ## 2.大作业任务
 
 <img src="images/page1.png" alt="Page 1 an" width="500">
 <img src="images/page2.png" alt="Page 2 an" width="500">
 
+---
+
+
 
 ## 3.文件结构
+
 PlateRecognition-Project/
 │
 ├── .gitignore                 
@@ -24,14 +34,14 @@ PlateRecognition-Project/
 │   └── recognize.pt           # LPRNet 识别模型
 │
 ├── core/                    # 核心 AI 逻辑
-│   ├── __init__.py
+│   ├── \_\_init_\_\.py
 │   ├── detector.py          # 封装 YOLOv8 推理的代码
 │   ├── recognizer.py        # 封装 LPRNet 推理的代码
 │   ├── lprnet_model.py      # LPRNet 的 PyTorch 模型定义
 │   └── lprnet_utils.py      # LPRNet 的 CTC 解码器和字符表
 │
 ├── gui/                     # PySide6 界面代码
-│   ├── __init__.py
+│   ├── \_\_init\_\_.py
 │   ├── main_window.py       # 定义 GUI 窗口、按钮和布局
 │   └── utils.py             # 包含 OpenCV/Numpy 转 QPixmap 的辅助函数
 │
@@ -39,11 +49,17 @@ PlateRecognition-Project/
 │   ├── prepare_ccpd_yolo.py
 │   └── prepare_ccpd_lprnet.py
 │
-├── 大作业报告.pdf      
+├── 大作业报告.pdf     
 └── 讲解视频.mp4               
 
+
+
+---
+
+
+
 ## 4.AI写的废话
-### 这一句不是废话：<font color = "red"> **其实用vs或者vscode来push很方便**</font>
+### 这一句不是废话：<font color = "red"> **建议用vscode**</font>
 
 
 ### 🚨 最核心的规则
@@ -54,26 +70,7 @@ PlateRecognition-Project/
 
 -----
 
-### 1\. 组长的初始设置 (在 GitHub 网页上操作)
-
-在项目开始前，组长需要完成以下设置：
-
-1.  **创建仓库：** 在 GitHub 上创建一个**私有** (Private) 仓库。
-2.  **添加组员：** 进入 `Settings` \> `Collaborators`，将所有组员的 GitHub 账号加为协作者。
-3.  **保护 `main` 分支（最重要）：**
-      * 进入 `Settings` \> `Branches`。
-      * 点击 `Add branch protection rule`。
-      * 在 "Branch name pattern" 中填入 `main`。
-      * 勾选 **"Require a pull request before merging"** (必须通过 PR 才能合并)。
-      * 勾选 **"Require approvals"** (需要有人批准)，并将数量设为 `1`。
-      * 点击 `Create` 保存。
-4.  **添加 `.gitignore` 文件：**
-      * 在项目根目录创建一个 `.gitignore` 文件。
-      * 这能防止将 IDE 配置 (如 `.vscode/`, `.idea/`)、缓存 (`__pycache__/`) 或大型数据文件 (如 `dataset/`, `.pt`) 传上 GitHub。
-
------
-
-### 2\. 组员的协作流程
+### 1\. 协作流程
 
 #### A. 第一次：克隆项目到本地 (仅需一次)
 
@@ -95,8 +92,8 @@ PlateRecognition-Project/
 | :--- | :--- |
 | **命令行 (CLI)** | 1. `git checkout main` (切换到 main)<br>2. `git pull origin main` (拉取最新代码) |
 | **VS Code** | 1. 点击左下角分支名，选择 `main` 分支。<br>2. 点击左下角状态栏的**同步按钮** (🔄) 或点击 `...` 菜单选择 **“拉取” (Pull)**。 |
-| **Visual Studio** | 1. 打开 “Git 更改” (Git Changes) 窗口。<br>2. 点击顶部
-分支名，选择 `main`。<br>3. 点击 **“拉取” (Pull)** 按钮 (⬇️)。 |
+| **Visual Studio** | 1. 打开 “Git 更改” (Git Changes) 窗口。<br>2. 点击顶部分支名，选择 `main`。<br/>3. 点击 **“拉取” (Pull)** 按钮 (⬇️)。 |
+
 
 ##### 第2步：创建新分支 (在新分支上工作)
 
@@ -130,7 +127,7 @@ PlateRecognition-Project/
 
 -----
 
-### 3\. 代码审查 (Review) 与合并
+### 2\. 代码审查 (Review) 与合并
 
 1.  **审查 (Review)：** 组员（Reviewer）会收到通知。TA 可以在 **GitHub 网页**上，或直接在 **VS Code / Visual Studio** 的 "GitHub" 面板中查看 PR 的 `Files changed` (文件改动)。
 2.  **反馈 (Feedback)：**
@@ -144,16 +141,16 @@ PlateRecognition-Project/
 
 -----
 
-### 4\. 如何解决合并冲突 (Merge Conflicts)
+### 3\. 如何解决合并冲突 (Merge Conflicts)
 
 **什么是冲突？** 你和组员修改了**同一个文件的同一行代码**，Git 不知道该保留谁的。
 
 **推荐使用 VS Code / Visual Studio 在本地解决：**
 
 1.  **第1步：更新 `main`**
-      * 切换到你本地的 `main` 分支，并 `pull` (拉取) 最新代码。（参见 2.B.第1步）
+      * 切换到你本地的 `main` 分支，并 `pull` (拉取) 最新代码。（参见 1.B.第1步）
 2.  **第2步：切回你的功能分支**
-      * 切换回你正在开发的分支 (例如 `feature/gui-interface`)。（参见 2.B.第2步）
+      * 切换回你正在开发的分支 (例如 `feature/gui-interface`)。（参见 1.B.第2步）
 3.  **第3步：合并 `main` 到当前分支**
       * **命令行:** `git merge main`
       * **VS Code:** 打开命令面板 (Ctrl+Shift+P)，输入 `Git: Merge Branch...`，然后选择 `main`。
@@ -175,4 +172,12 @@ PlateRecognition-Project/
       * 当你用 GUI 解决了所有冲突后，文件会自动变为“已暂存”。
       * 你只需要在“消息”框里输入一条 Commit 信息 (例如 `fix: 解决了合并冲突`)，然后**提交 (Commit)**。
       * 最后，**推送 (Push)** 你的分支。现在冲突已经解决了！
+
+
+
+---
+
+
+
+大作业中分工以及百分比将由AI对`commit`进行总结。遇到`443`问题只需等待等待等待再`push`即可。
 
