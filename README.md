@@ -1,7 +1,12 @@
 # ICE2607teamProject
-一些链接 <a href = "https://github.com/detectRecog/CCPD?tab=readme-ov-file"> 数据库 </a>
+## 一些链接
+<a href = "https://github.com/detectRecog/CCPD?tab=readme-ov-file"> 数据库 </a>
 有能力可以下载一下
 
+## 大作业任务
+
+<img src="images/page1.png" alt="Page 1 an" width="500">
+<img src="images/page2.png" alt="Page 2 an" width="500">>
 
 
 
@@ -20,7 +25,7 @@
 
 
 
-### 1. 组长（或指定一个同学）的初始设置
+### 1. 组长的初始设置
 
 
 
