@@ -1,17 +1,20 @@
 # ICE2607teamProject
-## 一些链接
-<a href = "https://github.com/detectRecog/CCPD?tab=readme-ov-file"> 数据库 </a>
-有能力可以下载一下
+## 1.一些链接
+- CCPD数据集github链接：
+> <a href = "https://github.com/detectRecog/CCPD?tab=readme-ov-file"> CCPD数据库 </a>
 
-## 大作业任务
+- 已经下载好的CCPD数据集交大云盘链接：
+> 链接: https://pan.sjtu.edu.cn/web/share/a4afb22d5d891684a71c27c5dfd4a398, 提取码: lnx3
+
+## 2.大作业任务
 
 <img src="images/page1.png" alt="Page 1 an" width="500">
-<img src="images/page2.png" alt="Page 2 an" width="500">>
+<img src="images/page2.png" alt="Page 2 an" width="500">
 
 
 
-## AI写的废话
-这一句不是废话：<font color = "red"> **其实用vs或者vscode来push很方便**</font>
+## 3.AI写的废话
+### 这一句不是废话：<font color = "red"> **其实用vs或者vscode来push很方便**</font>
 
 ### 最核心的规则
 
