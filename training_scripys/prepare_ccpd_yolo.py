@@ -87,8 +87,8 @@ def process_ccpd(ccpd_dir, output_dir):
 
 if __name__ == "__main__":
     # 1. 修改为你解压后的 CCPD 根目录
-    CCPD_DATA_PATH = 'D:/datasets/CCPD' 
+    CCPD_DATA_PATH = "D:/Files/openCV/dataset/CCPD2019"
     # 2. 修改为你希望的输出目录 (YOLO 格式)
-    YOLO_DATA_PATH = 'D:/datasets/CCPD_YOLO' 
+    YOLO_DATA_PATH = "D:/Files/openCV/datasets/CCPD_YOLO"
 
     process_ccpd(CCPD_DATA_PATH, YOLO_DATA_PATH)

@@ -56,9 +56,27 @@ PlateRecognition-Project/
 
 ---
 
+## 4.steps
+**记得修改地址**
+执行训练任务 1 (检测模型)：
 
+使用 `prepare_ccpd_yolo.py` 脚本处理下载的数据。
 
-## 4.AI写的废话
+运行 `yolo task=detect mode=train model=yolov8n.pt data="D:\Files\openCV\datasets\CCPD_YOLO\data.yaml" epochs=50 imgsz=640 batch=16` 命令开始训练。
+
+将生成的 best.pt 重命名为 models/detect.pt。
+
+执行训练任务 2 (识别模型)：
+
+下载 LPRNet_Pytorch 库 (git clone ...)。
+
+使用`prepare_ccpd_lprnet.py` 脚本处理数据并自动放入 LPRNet 库。
+
+运行 python train_LPRNet.py 命令开始训练。
+
+将生成的 .pth 文件重命名为 models/recognize.pt。
+
+## 5.AI写的废话
 ### 这一句不是废话：<font color = "red"> **建议用vscode**</font>
 
 
