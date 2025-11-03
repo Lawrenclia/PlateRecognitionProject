@@ -96,7 +96,7 @@ PlateRecognition-Project/
 
 | 工具 | 操作步骤 |
 | :--- | :--- |
-| **命令行 (CLI)** | `git clone https://github.com/Lawrenclia/ICE2607teamProject` |
+| **命令行 (CLI)** | `git clone https://github.com/Lawrenclia/PlateRecognitionProject` |
 | **VS Code** | 1. 打开“源代码管理” (Source Control) 面板。<br>2. 点击 **“克隆存储库”** (Clone Repository)。<br>3. 粘贴链接并选择本地文件夹。 |
 | **Visual Studio** | 1. 在启动窗口选择 **“克隆存储库”** (Clone a repository)。<br>2. 粘贴链接 (存储库位置) 并选择本地路径。 |
 
