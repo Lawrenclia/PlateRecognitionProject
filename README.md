@@ -8,6 +8,16 @@
 
 
 
+- 类似的项目
+
+  <a href = "https://github.com/wzh191920/License-Plate-Recognition"> 第一个 </a>
+
+  <a href = "https://github.com/we0091234/Chinese_license_plate_detection_recognition">  第二个 </a>
+  
+  <a href = "https://github.com/DataXujing/vehicle-license-plate-recognition"> 第三个 </a>
+
+
+
 ---
 
 
