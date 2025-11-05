@@ -1,4 +1,4 @@
-# ICE2607teamProject
+# Project
 ## 1.一些链接
 - CCPD数据集github链接：
 > <a href = "https://github.com/detectRecog/CCPD?tab=readme-ov-file"> CCPD数据库 </a>
@@ -13,12 +13,10 @@
   <a href = "https://github.com/wzh191920/License-Plate-Recognition"> 第一个 </a>
 
   <a href = "https://github.com/we0091234/Chinese_license_plate_detection_recognition">  第二个 </a>
-  
+
   <a href = "https://github.com/DataXujing/vehicle-license-plate-recognition"> 第三个 </a>
 
 
-
----
 
 
 
@@ -27,18 +25,14 @@
 <img src="images/page1.png" alt="Page 1 an" width="500">
 <img src="images/page2.png" alt="Page 2 an" width="500">
 
----
-
-
 
 ## 3.如何运行
-```
+
 1.下载requirements.txt中的库
 2.运行gui_app.py
 3.over
-```
 
----
+
 
 ## 4.函数介绍
 ### 数据处理相关
@@ -62,6 +56,8 @@
 - `utils/plots.py`：提供`color_list`函数，将 Matplotlib 默认颜色周期（十六进制）转换为 RGB 元组列表，用于可视化结果（如检测框、识别结果）的颜色配置。
 - `utils/general.py`：通用工具函数集合，包括日志设置、随机种子初始化、文件路径检查、坐标格式转换（如`xyxy2xywh`）、数据集验证等，为项目各模块提供基础支持。
 - `data/scripts/get_voc.sh`：Shell 脚本，用于下载和整理 VOC 数据集（按指定目录结构存放图片和标签，生成训练 / 验证集列表），若项目不使用 VOC 数据集可忽略。
+
+
 
 ## 5.AI写的废话
 ### 这一句不是废话：<font color = "red"> **建议用vscode**</font>
