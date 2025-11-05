@@ -28,9 +28,9 @@
 
 ## 3.如何运行
 
-1.下载requirements.txt中的库
-2.运行gui_app.py
-3.over
+1. 下载requirements.txt中的库
+2. 运行gui_app.py
+3. over
 
 
 
