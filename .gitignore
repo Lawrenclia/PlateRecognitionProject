@@ -34,6 +34,7 @@ ccpd/
 !*.png
 !*.yaml
 !*.md
+!*.txt
 =======
 # Python 缓存
 __pycache__/
