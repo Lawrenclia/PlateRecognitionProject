@@ -106,8 +106,7 @@ if __name__ == '__main__':
     file_root = r"D:/Files/openCV/dataset"
     file_list=[]
     allFilePath(file_root,file_list)
-    
-    # 使用 tqdm(file_list...) 
+
     for img_path in tqdm(file_list, desc="Processing Images"): 
         
         try: 
@@ -130,7 +129,6 @@ if __name__ == '__main__':
                     f.write(str_label)
                     
         except Exception as e: 
-            # 捕获所有可能的错误 (比如文件名解析失败)
             print(f"\nError processing file {img_path}: {e}. Skipping.")
         
         
