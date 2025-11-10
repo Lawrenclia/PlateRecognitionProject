@@ -1,3 +1,4 @@
+#处理CCPD车牌数据集并转换为YOLO格式
 import os
 import shutil
 import cv2

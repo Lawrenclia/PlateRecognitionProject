@@ -1,23 +1,16 @@
 # -*- coding: UTF-8 -*-
 import argparse
 import time
-from pathlib import Path
 import os
 import cv2
 import torch
-import torch.backends.cudnn as cudnn
-from numpy import random
 import copy
 import numpy as np
 from models.experimental import attempt_load
 from utils.datasets import letterbox
-from utils.general import check_img_size, non_max_suppression_face, apply_classifier, scale_coords, xyxy2xywh, \
-    strip_optimizer, set_logging, increment_path
-from utils.plots import plot_one_box
-from utils.torch_utils import select_device, load_classifier, time_synchronized
+from utils.general import check_img_size, non_max_suppression_face,scale_coords
 from utils.cv_puttext import cv2ImgAddText
 from plate_recognition.plate_rec import get_plate_result,allFilePath,init_model,cv_imread
-# from plate_recognition.plate_cls import cv_imread
 from plate_recognition.double_plate_split_merge import get_split_merge
 
 clors = [(255,0,0),(0,255,0),(0,0,255),(255,255,0),(0,255,255)]

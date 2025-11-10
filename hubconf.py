@@ -1,3 +1,4 @@
+#YOLOv5的PyTorch Hub接口文件，允许用户通过PyTorch Hub轻松加载和使用YOLOv5模型
 """File for accessing YOLOv5 via PyTorch Hub https://pytorch.org/hub/
 
 Usage:

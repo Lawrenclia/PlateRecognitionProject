@@ -1,3 +1,4 @@
+#处理JSON标注文件并转换为YOLO格式
 import json
 import os
 import numpy as np

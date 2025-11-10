@@ -19,6 +19,9 @@ matplotlib-inline
 nest-asyncio
 numpy
 opencv-python
+onnx 
+onnxruntime
+openvino
 packaging
 pandas
 parso
