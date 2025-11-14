@@ -22,7 +22,6 @@ except ImportError as e:
     print("并且已经安装了所有 'requirements.txt' 中的依赖项。")
     sys.exit(1)
 
-# --- 关键函数：从 detect_plate.py 中复制 ---
 def four_point_transform(image, pts):
     rect = pts.astype('float32')
     (tl, tr, br, bl) = rect

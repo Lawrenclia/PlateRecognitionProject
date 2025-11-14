@@ -1,5 +1,4 @@
 import argparse
-# import logging # <-- 已删除
 import math
 import os
 import random
@@ -438,19 +437,11 @@ def train(hyp, opt, device, tb_writer=None, wandb=None):
 
         # (可选) 在 COCO 数据集上测试
         # logger.info('%g epochs completed in %.3f hours.\n' % ...) # <-- 已删除
-        if opt.data.endswith('coco.yaml') and nc == 80:
-            for conf, iou, save_json in ([0.25, 0.45, False], [0.001, 0.65, True]):
-                results, _, _ = test.test(opt.data,
-                                          batch_size=total_batch_size,
-                                          imgsz=imgsz_test,
-                                          conf_thres=conf,
-                                          iou_thres=iou,
-                                          model=attempt_load(final, device).half(),
-                                          single_cls=opt.single_cls,
-                                          dataloader=testloader,
-                                          save_dir=save_dir,
-                                          save_json=save_json,
-                                          plots=False)
+        
+        # --- 移除了 COCO 特定的最终评估模块 ---
+        # if opt.data.endswith('coco.yaml') and nc == 80:
+        #     for conf, iou, save_json in ([0.25, 0.45, False], [0.001, 0.65, True]):
+        #         ...
 
     else:
         dist.destroy_process_group()
