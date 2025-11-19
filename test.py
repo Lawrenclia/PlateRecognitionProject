@@ -10,9 +10,8 @@ import yaml
 from tqdm import tqdm
 
 from models.experimental import attempt_load
-# from utils.datasets import create_dataloader
 from utils.face_datasets import create_dataloader
-from utils.general import coco80_to_coco91_class, check_dataset, check_file, check_img_size, box_iou, \
+from utils.general import check_dataset, check_file, check_img_size, box_iou, \
     non_max_suppression, scale_coords, xyxy2xywh, xywh2xyxy, set_logging, increment_path, non_max_suppression_face
 from utils.loss import compute_loss
 from utils.metrics import ap_per_class, ConfusionMatrix
@@ -56,10 +55,6 @@ def test(data,
         model = attempt_load(weights, map_location=device)  # load FP32 model
         imgsz = check_img_size(imgsz, s=model.stride.max())  # check img_size
 
-        # Multi-GPU disabled, incompatible with .half() https://github.com/ultralytics/yolov5/issues/99
-        # if device.type != 'cpu' and torch.cuda.device_count() > 1:
-        #     model = nn.DataParallel(model)
-
     # Half
     half = device.type != 'cpu'  # half precision only supported on CUDA
     if half:
@@ -67,7 +62,6 @@ def test(data,
 
     # Configure
     model.eval()
-    is_coco = data.endswith('coco.yaml')  # is COCO dataset
     with open(data) as f:
         data = yaml.load(f, Loader=yaml.FullLoader)  # model dict
     check_dataset(data)  # check
@@ -92,7 +86,7 @@ def test(data,
     seen = 0
     confusion_matrix = ConfusionMatrix(nc=nc)
     names = {k: v for k, v in enumerate(model.names if hasattr(model, 'names') else model.module.names)}
-    coco91class = coco80_to_coco91_class()
+    # coco91class = coco80_to_coco91_class()  # <-- 移除
     s = ('%20s' + '%12s' * 6) % ('Class', 'Images', 'Targets', 'P', 'R', 'mAP@.5', 'mAP@.5:.95')
     p, r, f1, mp, mr, map50, map, t0, t1 = 0., 0., 0., 0., 0., 0., 0., 0., 0.
     loss = torch.zeros(3, device=device)
@@ -167,7 +161,8 @@ def test(data,
                 box[:, :2] -= box[:, 2:] / 2  # xy center to top-left corner
                 for p, b in zip(pred.tolist(), box.tolist()):
                     jdict.append({'image_id': image_id,
-                                  'category_id': coco91class[int(p[15])] if is_coco else int(p[15]),
+                                  # 'category_id': coco91class[int(p[15])] if is_coco else int(p[15]), # <-- 修改
+                                  'category_id': int(p[15]), # <-- 修改后
                                   'bbox': [round(x, 3) for x in b],
                                   'score': round(p[4], 5)})
 
@@ -248,27 +243,13 @@ def test(data,
     # Save JSON
     if save_json and len(jdict):
         w = Path(weights[0] if isinstance(weights, list) else weights).stem if weights is not None else ''  # weights
-        anno_json = '../coco/annotations/instances_val2017.json'  # annotations json
+        # anno_json = '../coco/annotations/instances_val2017.json' # <-- 移除
         pred_json = str(save_dir / f"{w}_predictions.json")  # predictions json
-        print('\nEvaluating pycocotools mAP... saving %s...' % pred_json)
+        # print('\nEvaluating pycocotools mAP... saving %s...' % pred_json) # <-- 修改
+        print(f'\nSaving predictions to {pred_json}...') # <-- 修改后
         with open(pred_json, 'w') as f:
             json.dump(jdict, f)
 
-        try:  # https://github.com/cocodataset/cocoapi/blob/master/PythonAPI/pycocoEvalDemo.ipynb
-            from pycocotools.coco import COCO
-            from pycocotools.cocoeval import COCOeval
-
-            anno = COCO(anno_json)  # init annotations api
-            pred = anno.loadRes(pred_json)  # init predictions api
-            eval = COCOeval(anno, pred, 'bbox')
-            if is_coco:
-                eval.params.imgIds = [int(Path(x).stem) for x in dataloader.dataset.img_files]  # image IDs to evaluate
-            eval.evaluate()
-            eval.accumulate()
-            eval.summarize()
-            map, map50 = eval.stats[:2]  # update results (mAP@0.5:0.95, mAP@0.5)
-        except Exception as e:
-            print(f'pycocotools unable to run: {e}')
 
     # Return results
     if not training:
@@ -302,7 +283,7 @@ if __name__ == '__main__':
     parser.add_argument('--name', default='exp', help='save to project/name')
     parser.add_argument('--exist-ok', action='store_true', help='existing project/name ok, do not increment')
     opt = parser.parse_args()
-    opt.save_json |= opt.data.endswith('coco.yaml')
+    # opt.save_json |= opt.data.endswith('coco.yaml') # <-- 移除
     opt.data = check_file(opt.data)  # check file
     print(opt)
 

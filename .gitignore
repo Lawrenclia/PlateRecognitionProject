@@ -47,7 +47,6 @@ venv/
 
 # AI 模型和数据
 models/
-*.pt
 *.weights
 *.onnx
 dataset/
