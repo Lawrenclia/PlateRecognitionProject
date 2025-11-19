@@ -47,9 +47,14 @@ venv/
 
 # AI 模型和数据
 models/
-*.pt
 *.weights
 *.onnx
 dataset/
 data/
+
+# 打包文件 (Source 10)
+dist/
+build/
+*.exe
+*.spec
 >>>>>>> 1636af5e95da321410b7937cf92e6bf1dde5b3cf
