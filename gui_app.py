@@ -1,6 +1,3 @@
-### 文件名: gui_app_light_theme.py
-### (这是应用了 f0f4f9, ffffff, 0b57d0 浅色主题的完整代码)
-
 import sys
 import os
 import cv2
@@ -25,10 +22,9 @@ except ImportError as e:
     print("并且已经安装了所有 'requirements.txt' 中的依赖项。")
     sys.exit(1)
 
-# --- 新配色方案 (浅色极简主题) ---
-BG_LIGHT = "#f0f4f9"      # 主背景 (浅蓝灰) - [用户指定]
-CARD_LIGHT = "#ffffff"      # 卡片/面板背景 (纯白) - [用户指定]
-ACCENT_BLUE = "#0b57d0"    # 强调色 (亮蓝) - [用户指定]
+BG_LIGHT = "#f0f4f9"      # 主背景 (浅蓝灰) 
+CARD_LIGHT = "#ffffff"      # 卡片/面板背景 (纯白) 
+ACCENT_BLUE = "#0b57d0"    # 强调色 (亮蓝) 
 
 INPUT_BG = "#F8F9FA"      # 输入框/占位符背景 (浅灰)
 BORDER_LIGHT = "#E0E4E8"   # 边框 (标准浅灰)
@@ -36,7 +32,15 @@ TEXT_PRIMARY = "#202124"  # 主文字 (深灰/近黑)
 TEXT_MUTED = "#5f6368"    # 辅助文字 (中灰)
 HOVER_LIGHT = "#F4F8FE"    # 悬停 (极浅蓝)
 
-# --- 关键函数：从 detect_plate.py 中复制 ---
+
+def resource_path(relative_path):
+    """ 获取资源绝对路径，用于 PyInstaller 打包 """
+    if hasattr(sys, '_MEIPASS'):
+        # PyInstaller 会将资源解压到 sys._MEIPASS 临时目录
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
+
+
 def four_point_transform(image, pts):
     rect = pts.astype('float32')
     (tl, tr, br, bl) = rect
@@ -61,7 +65,6 @@ def four_point_transform(image, pts):
     warped = cv2.warpPerspective(image, M, (maxWidth, maxHeight))
     return warped
 
-# --- 自定义美化组件 ---
 
 class ClickableImageFrame(QLabel):
     """
@@ -147,7 +150,7 @@ class PlateResultWidget(QFrame):
         "白色": "#FFFFFF",
         "未知": "#707982" 
     }
-    # 浅色背景车牌（应使用深色文字）
+    
     LIGHT_BACKGROUNDS = ["#F6A600", "#FFFFFF"]
 
     def __init__(self, parent=None):
@@ -247,7 +250,6 @@ class PlateResultWidget(QFrame):
         self.dot_label.setText(dot_text)
         self.suffix_label.setText(suffix_text)
         
-        # --- [配色修改] ---
         self.setStyleSheet(f"""
             QFrame {{
                 background-color: {hex_color};
@@ -278,7 +280,6 @@ class PlateResultWidget(QFrame):
         
         self.status_label.setText("等待识别")
         
-        # --- [配色修改] ---
         self.setStyleSheet(f"""
             QFrame {{
                 background-color: {INPUT_BG}; /* 统一为输入框背景 */
@@ -301,8 +302,8 @@ class PlateRecognizerGUI(QWidget):
     def __init__(self):
         super().__init__()
         
-        self.DETECT_MODEL_PATH = 'weights/plate_detect.pt'
-        self.REC_MODEL_PATH = 'weights/plate_rec_color.pth'
+        self.DETECT_MODEL_PATH = resource_path(os.path.join('weights', 'plate_detect.pt'))
+        self.REC_MODEL_PATH = resource_path(os.path.join('weights', 'plate_rec_color.pth'))
         self.IMG_SIZE = 640
         self.IS_COLOR = True 
         
@@ -532,8 +533,6 @@ class PlateRecognizerGUI(QWidget):
             Qt.KeepAspectRatio, 
             Qt.SmoothTransformation
         ))
-        # --- [配色修改] ---
-        # 为截图设置一个背景板
         label.setStyleSheet(f"border: none; border-radius: 10px; background-color: {INPUT_BG};")
 
 
