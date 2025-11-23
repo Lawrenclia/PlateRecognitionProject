@@ -22,7 +22,25 @@ except ImportError as e:
     print("并且已经安装了所有 'requirements.txt' 中的依赖项。")
     sys.exit(1)
 
-# --- 关键函数：从 detect_plate.py 中复制 ---
+BG_LIGHT = "#f0f4f9"      # 主背景 (浅蓝灰) 
+CARD_LIGHT = "#ffffff"      # 卡片/面板背景 (纯白) 
+ACCENT_BLUE = "#0b57d0"    # 强调色 (亮蓝) 
+
+INPUT_BG = "#F8F9FA"      # 输入框/占位符背景 (浅灰)
+BORDER_LIGHT = "#E0E4E8"   # 边框 (标准浅灰)
+TEXT_PRIMARY = "#202124"  # 主文字 (深灰/近黑)
+TEXT_MUTED = "#5f6368"    # 辅助文字 (中灰)
+HOVER_LIGHT = "#F4F8FE"    # 悬停 (极浅蓝)
+
+
+def resource_path(relative_path):
+    """ 获取资源绝对路径，用于 PyInstaller 打包 """
+    if hasattr(sys, '_MEIPASS'):
+        # PyInstaller 会将资源解压到 sys._MEIPASS 临时目录
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
+
+
 def four_point_transform(image, pts):
     rect = pts.astype('float32')
     (tl, tr, br, bl) = rect
@@ -47,11 +65,10 @@ def four_point_transform(image, pts):
     warped = cv2.warpPerspective(image, M, (maxWidth, maxHeight))
     return warped
 
-# --- 自定义美化组件 ---
 
 class ClickableImageFrame(QLabel):
     """
-    一个可点击的QLabel, 用于加载图片 (v2)
+    一个可点击的QLabel, 用于加载图片 (v2 - Light Theme)
     """
     clicked = Signal()
 
@@ -60,18 +77,20 @@ class ClickableImageFrame(QLabel):
         self.original_pixmap = None
         self.setAlignment(Qt.AlignCenter)
         self.setCursor(Qt.PointingHandCursor)
-        self.setStyleSheet("""
-            QLabel {
-                background-color: #F0F2F5;
-                border: 2px dashed #B0B9C2;
+        
+        # --- [配色修改] ---
+        self.setStyleSheet(f"""
+            QLabel {{
+                background-color: {BG_LIGHT};
+                border: 2px dashed {BORDER_LIGHT};
                 border-radius: 10px;
-                color: #707982;
+                color: {TEXT_MUTED};
                 font-size: 18px;
-            }
-            QLabel:hover {
-                background-color: #E6E9ED;
-                border-color: #0078D7;
-            }
+            }}
+            QLabel:hover {{
+                background-color: {HOVER_LIGHT};
+                border-color: {ACCENT_BLUE};
+            }}
         """)
         self.setText("点击加载图片")
 
@@ -86,7 +105,19 @@ class ClickableImageFrame(QLabel):
     def clear(self):
         self.original_pixmap = None
         self.setText("点击加载图片")
-        self.setStyleSheet(self.styleSheet()) # 刷新样式
+        self.setStyleSheet(f"""
+            QLabel {{
+                background-color: {BG_LIGHT};
+                border: 2px dashed {BORDER_LIGHT};
+                border-radius: 10px;
+                color: {TEXT_MUTED};
+                font-size: 18px;
+            }}
+            QLabel:hover {{
+                background-color: {HOVER_LIGHT};
+                border-color: {ACCENT_BLUE};
+            }}
+        """)
 
     def update_display(self):
         if not self.original_pixmap:
@@ -99,7 +130,7 @@ class ClickableImageFrame(QLabel):
             Qt.SmoothTransformation
         )
         super().setPixmap(scaled_pixmap)
-        self.setStyleSheet("border: none; border-radius: 10px;")
+        self.setStyleSheet(f"border: none; border-radius: 10px; background-color: {CARD_LIGHT};")
 
     def resizeEvent(self, event):
         if self.original_pixmap:
@@ -109,7 +140,7 @@ class ClickableImageFrame(QLabel):
 
 class PlateResultWidget(QFrame):
     """
-    用于显示格式化车牌结果
+    用于显示格式化车牌结果 (Light Theme)
     """
     PLATE_COLOR_MAP = {
         "蓝色": "#0055AA",
@@ -119,6 +150,7 @@ class PlateResultWidget(QFrame):
         "白色": "#FFFFFF",
         "未知": "#707982" 
     }
+    
     LIGHT_BACKGROUNDS = ["#F6A600", "#FFFFFF"]
 
     def __init__(self, parent=None):
@@ -132,10 +164,8 @@ class PlateResultWidget(QFrame):
 
         self.plate_font = QFont("黑体", 24, QFont.Bold)
         
-        # 状态 (status) 字体现在主要由样式表控制 (16px)
-        # 但我们保留 setFont 以防万一样式表被覆盖
         self.status_font = QFont(self.font()) 
-        self.status_font.setPointSize(16) # (这个 16pt 会被 16px 覆盖) 
+        self.status_font.setPointSize(16)
         
         # 预先创建标签, 方便切换
         self.prefix_label = QLabel()
@@ -166,9 +196,10 @@ class PlateResultWidget(QFrame):
     def set_result(self, text, color_name):
         hex_color = self.PLATE_COLOR_MAP.get(color_name, self.PLATE_COLOR_MAP["未知"])
         
+        # 默认使用白色文字 (适用于 蓝/绿/黑 车牌)
         text_color = "#FFFFFF" 
         if hex_color in self.LIGHT_BACKGROUNDS:
-            text_color = "#111111"
+            text_color = "#111111" # 浅色背景(黄/白)使用黑色文字
 
         prefix_text = "N/A"
         dot_text = ""
@@ -222,7 +253,7 @@ class PlateResultWidget(QFrame):
         self.setStyleSheet(f"""
             QFrame {{
                 background-color: {hex_color};
-                border: 3px solid white; 
+                border: 3px solid {CARD_LIGHT}; /* 用卡片色(白色)做边框 */
                 border-radius: 10px;
             }}
             QLabel {{
@@ -249,23 +280,21 @@ class PlateResultWidget(QFrame):
         
         self.status_label.setText("等待识别")
         
-        # --- 修改开始：统一 "等待" 状态的样式 (添加了 font-size) ---
         self.setStyleSheet(f"""
             QFrame {{
-                background-color: #F8F9FA; /* 统一为浅灰色背景 */
-                border: 1px solid #E0E4E8; /* 统一为细边框 */
+                background-color: {INPUT_BG}; /* 统一为输入框背景 */
+                border: 1px solid {BORDER_LIGHT}; /* 统一为细边框 */
                 border-radius: 10px;
             }}
             QLabel {{
-                color: #707982; /* 统一文本颜色 */
+                color: {TEXT_MUTED}; /* 统一文本颜色 */
                 background-color: transparent;
                 border: none;
                 padding-top: 5px;
                 padding-bottom: 5px;
-                font-size: 16px; /* <-- 修正点：确保字体大小为 16px */
+                font-size: 16px; /* 确保字体大小为 16px */
             }}
         """)
-        # --- 修改结束 ---
         
 # --- 主 GUI 应用程序 ---
 
@@ -273,8 +302,8 @@ class PlateRecognizerGUI(QWidget):
     def __init__(self):
         super().__init__()
         
-        self.DETECT_MODEL_PATH = 'weights/plate_detect.pt'
-        self.REC_MODEL_PATH = 'weights/plate_rec_color.pth'
+        self.DETECT_MODEL_PATH = resource_path(os.path.join('weights', 'plate_detect.pt'))
+        self.REC_MODEL_PATH = resource_path(os.path.join('weights', 'plate_rec_color.pth'))
         self.IMG_SIZE = 640
         self.IS_COLOR = True 
         
@@ -301,30 +330,44 @@ class PlateRecognizerGUI(QWidget):
             print("模型加载完毕。")
 
         except Exception as e:
-            QMessageBox.critical(self, "模型加载失败", f"加载 AI 模型时出错: {e}\n程序即将退出。")
+            # --- [配色修改] ---
+            msg_box = QMessageBox(self)
+            msg_box.setIcon(QMessageBox.Critical)
+            msg_box.setWindowTitle("模型加载失败")
+            msg_box.setText(f"加载 AI 模型时出错: {e}\n程序即将退出。")
+            msg_box.setStyleSheet(f"""
+                QMessageBox {{ background-color: {CARD_LIGHT}; }}
+                QLabel {{ color: {TEXT_PRIMARY}; }}
+                QPushButton {{ 
+                    background-color: {ACCENT_BLUE}; color: white; 
+                    padding: 5px 10px; border-radius: 5px; 
+                }}
+            """)
+            msg_box.exec_()
             sys.exit(1)
 
 
     def init_ui(self):
-        self.setWindowTitle("车牌识别系统!!!!!")
+        self.setWindowTitle("车牌识别系统")
         self.resize(1000, 600)
         
-        self.setStyleSheet("""
-            QWidget {
-                background-color: #F0F2F5;
+        # --- [配色修改] ---
+        self.setStyleSheet(f"""
+            QWidget {{
+                background-color: {BG_LIGHT};
                 font-family: 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
-            }
-            QFrame#LeftPanel {
-                background-color: #FFFFFF;
+            }}
+            QFrame#LeftPanel {{
+                background-color: {CARD_LIGHT};
                 border-radius: 10px;
                 padding: 15px;
-            }
-            QLabel.TitleLabel {
+            }}
+            QLabel.TitleLabel {{
                 font-size: 18px;
                 font-weight: bold;
-                color: #333;
+                color: {TEXT_PRIMARY};
                 margin-bottom: 10px;
-            }
+            }}
         """)
 
         main_layout = QHBoxLayout(self)
@@ -355,14 +398,15 @@ class PlateRecognizerGUI(QWidget):
         self.plate_label.setMinimumHeight(80) 
         self.plate_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding) 
         
-        self.plate_label.setStyleSheet("""
-            QLabel#PlateLabel {
-                background-color: #F8F9FA;
+        # --- [配色修改] ---
+        self.plate_label.setStyleSheet(f"""
+            QLabel#PlateLabel {{
+                background-color: {INPUT_BG};
                 border-radius: 10px; 
-                color: #707982;
-                border: 1px solid #E0E4E8;
+                color: {TEXT_MUTED};
+                border: 1px solid {BORDER_LIGHT};
                 font-size: 16px;
-            }
+            }}
         """)
         
         right_layout.addWidget(plate_title)
@@ -392,9 +436,17 @@ class PlateRecognizerGUI(QWidget):
         self.plate_label_pixmap = None 
         self.plate_label.setPixmap(QPixmap()) 
         
-        # 设置为 "处理中..." 并刷新样式, 保持 16px
+        # --- [配色修改] ---
         self.plate_label.setText("处理中...") 
-        self.plate_label.setStyleSheet(self.plate_label.styleSheet())
+        self.plate_label.setStyleSheet(f"""
+            QLabel#PlateLabel {{
+                background-color: {INPUT_BG};
+                border-radius: 10px; 
+                color: {TEXT_MUTED};
+                border: 1px solid {BORDER_LIGHT};
+                font-size: 16px;
+            }}
+        """)
         
         self.result_widget.clear()
         QApplication.processEvents() 
@@ -447,7 +499,21 @@ class PlateRecognizerGUI(QWidget):
                 self.plate_label.setText("未检测到")
 
         except Exception as e:
-            QMessageBox.warning(self, "处理失败", f"处理图片时出错: {e}")
+            # --- [配色修改] ---
+            msg_box = QMessageBox(self)
+            msg_box.setIcon(QMessageBox.Warning)
+            msg_box.setWindowTitle("处理失败")
+            msg_box.setText(f"处理图片时出错: {e}")
+            msg_box.setStyleSheet(f"""
+                QMessageBox {{ background-color: {CARD_LIGHT}; }}
+                QLabel {{ color: {TEXT_PRIMARY}; }}
+                QPushButton {{ 
+                    background-color: {ACCENT_BLUE}; color: white; 
+                    padding: 5px 10px; border-radius: 5px; 
+                }}
+            """)
+            msg_box.exec_()
+            
             self.image_label.clear()
             self.result_widget.clear()
             self.plate_label_pixmap = None
@@ -467,6 +533,8 @@ class PlateRecognizerGUI(QWidget):
             Qt.KeepAspectRatio, 
             Qt.SmoothTransformation
         ))
+        label.setStyleSheet(f"border: none; border-radius: 10px; background-color: {INPUT_BG};")
+
 
     def convert_cv_to_pixmap(self, cv_img) -> QPixmap:
         """
@@ -499,7 +567,7 @@ class PlateRecognizerGUI(QWidget):
         """
         super().resizeEvent(event)
         if hasattr(self, 'plate_label_pixmap') and self.plate_label_pixmap and not self.plate_label_pixmap.isNull():
-             self.display_scaled_image(self.plate_label, self.plate_label_pixmap)
+                 self.display_scaled_image(self.plate_label, self.plate_label_pixmap)
 
 
 if __name__ == "__main__":

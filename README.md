@@ -197,5 +197,35 @@ PlateRecognition-Project/
 
 
 
-大作业中分工以及百分比将由AI对`commit`进行总结。遇到`443`问题只需等待等待等待再`push`即可。
+大作业中分工以及百分比将由AI对`commit`进行总结。
 
+
+
+### 遇到`443`问题解决方法如下（70%能成功）：
+
+**浏览器可能自动使用了你系统的网络代理，但 Git 没有。**
+
+### 解决方案 A：**手动告诉 Git 去使用代理**。
+
+假设你的代理工具在本地（`127.0.0.1`）的 `7890` 端口上提供了一个 HTTP 代理（**注意：`7890` 只是一个示例**，请根据你工具的实际设置修改端口号，常见的有 `1080`、`10809`、`20170` 等）：
+
+在你的终端（CMD 或 PowerShell）中运行这两行命令：
+
+```
+git config --global http.proxy http://127.0.0.1:7890
+git config --global https.proxy http://127.0.0.1:7890
+```
+
+设置完之后，**重启 VS Code**，然后再次尝试 `Sync Changes`。
+
+(如果你将来不需要这个代理了，用 `git config --global --unset http.proxy` 和 `git config --global --unset https.proxy` 即可移除。)
+
+
+
+### 解决方案 B：再次检查 `hosts` 文件
+
+我还是要再强调一下这个。**即使 `ping` 是通的**，`hosts` 文件里一个过时或错误的 IP 依然会导致 Git 这种特定的连接失败。
+
+1. 用**管理员权限**打开 `C:\Windows\System32\drivers\etc\hosts` 文件。
+2. 仔细检查，把**所有**包含 `github.com` 的行前面都加上 `#` 来注释掉它。
+3. 保存文件，**重启 VS Code**，再试一次。
