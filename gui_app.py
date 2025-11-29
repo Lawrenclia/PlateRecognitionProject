@@ -436,7 +436,6 @@ class PlateRecognizerGUI(QWidget):
         self.plate_label_pixmap = None 
         self.plate_label.setPixmap(QPixmap()) 
         
-        # --- [配色修改] ---
         self.plate_label.setText("处理中...") 
         self.plate_label.setStyleSheet(f"""
             QLabel#PlateLabel {{
@@ -462,6 +461,10 @@ class PlateRecognizerGUI(QWidget):
             original_pixmap = self.convert_cv_to_pixmap(cv_image)
             self.image_label.setPixmap(original_pixmap)
             
+            # 首先对整张图片进行180度旋转
+            cv_image = self.rotate_image_180(cv_image)
+            
+            # 使用旋转后的图片进行识别
             dict_list = detect_Recognition_plate(
                 self.detect_model, cv_image, self.device, 
                 self.plate_rec_model, self.IMG_SIZE, is_color=self.IS_COLOR
@@ -473,10 +476,10 @@ class PlateRecognizerGUI(QWidget):
                 plate_color = result.get('plate_color', '未知')
                 landmarks = result.get('landmarks')
 
-                # 3.1 显示车牌号
+                # 显示车牌号
                 self.result_widget.set_result(plate_number, plate_color)
 
-                # 3.2 显示截图
+                # 显示截图
                 if landmarks:
                     landmarks_np = np.array(landmarks)
                     cropped_plate_img = four_point_transform(cv_image, landmarks_np)
@@ -499,7 +502,6 @@ class PlateRecognizerGUI(QWidget):
                 self.plate_label.setText("未检测到")
 
         except Exception as e:
-            # --- [配色修改] ---
             msg_box = QMessageBox(self)
             msg_box.setIcon(QMessageBox.Warning)
             msg_box.setWindowTitle("处理失败")
@@ -519,6 +521,20 @@ class PlateRecognizerGUI(QWidget):
             self.plate_label_pixmap = None
             self.plate_label.setPixmap(QPixmap())
             self.plate_label.setText("处理失败")
+
+    def rotate_image_180(self, image):
+        """
+        将图像旋转180度
+        """
+        if image is None:
+            return None
+        try:
+            # 使用OpenCV的rotate函数进行180度旋转
+            rotated = cv2.rotate(image, cv2.ROTATE_180)
+            return rotated
+        except Exception as e:
+            print(f"图像旋转失败: {e}")
+            return image  # 如果旋转失败，返回原图
 
     def display_scaled_image(self, label: QLabel, pixmap: QPixmap):
         """
