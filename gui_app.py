@@ -302,7 +302,7 @@ class PlateRecognizerGUI(QWidget):
     def __init__(self):
         super().__init__()
         
-        self.DETECT_MODEL_PATH = resource_path(os.path.join('weights', 'plate_detect.pt'))
+        self.DETECT_MODEL_PATH = resource_path(os.path.join('weights', 'best.pt'))
         self.REC_MODEL_PATH = resource_path(os.path.join('weights', 'plate_rec_color.pth'))
         self.IMG_SIZE = 640
         self.IS_COLOR = True 
