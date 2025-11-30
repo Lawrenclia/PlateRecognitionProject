@@ -15,7 +15,7 @@ from PySide6.QtCore import Qt, Signal
 try:
     from models.experimental import attempt_load
     from plate_recognition.plate_rec import init_model, cv_imread
-    from detect_plate import detect_Recognition_plate, load_model
+    from detect_plate import detect_Recognition_plate, load_model, detect_Recognition_plate_multi_models
 except ImportError as e:
     print(f"导入错误: {e}")
     print("请确保此脚本放置在 'chinese_license_plate_detection_recognition' 项目的根目录下,")
@@ -302,13 +302,21 @@ class PlateRecognizerGUI(QWidget):
     def __init__(self):
         super().__init__()
         
-        self.DETECT_MODEL_PATH = resource_path(os.path.join('weights', 'best.pt'))
+        # 定义多个备选模型路径
+        self.detect_model_paths = [
+            resource_path(os.path.join('weights', 'norm1.pt')),
+            resource_path(os.path.join('weights', 'norm2.pt')),
+            resource_path(os.path.join('weights', 'green.pt')),
+            resource_path(os.path.join('weights', 'hard.pt')),
+            # 可以添加更多备选模型
+        ]
+        
         self.REC_MODEL_PATH = resource_path(os.path.join('weights', 'plate_rec_color.pth'))
         self.IMG_SIZE = 640
         self.IS_COLOR = True 
         
         self.device = None
-        self.detect_model = None
+        self.detect_models = []  # 存储多个检测模型
         self.plate_rec_model = None
         
         self.plate_label_pixmap = None # 存储原始的截图 Pixmap
@@ -319,15 +327,32 @@ class PlateRecognizerGUI(QWidget):
     def init_ai_models(self):
         print("正在加载模型，请稍候...")
         try:
-            if not os.path.exists(self.DETECT_MODEL_PATH) or not os.path.exists(self.REC_MODEL_PATH):
-                raise FileNotFoundError("未找到 'weights' 文件夹中的模型文件。")
-
             self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
             print(f"使用设备: {self.device}")
 
-            self.detect_model = load_model(self.DETECT_MODEL_PATH, self.device)
+            # 加载多个检测模型
+            self.detect_models = []
+            for model_path in self.detect_model_paths:
+                if os.path.exists(model_path):
+                    try:
+                        print(f"尝试加载检测模型: {os.path.basename(model_path)}")
+                        model = load_model(model_path, self.device)
+                        self.detect_models.append(model)
+                        print(f"成功加载检测模型: {os.path.basename(model_path)}")
+                    except Exception as e:
+                        print(f"加载检测模型 {os.path.basename(model_path)} 失败: {e}")
+                else:
+                    print(f"检测模型文件不存在: {model_path}")
+
+            if not self.detect_models:
+                raise FileNotFoundError("没有可用的检测模型文件。")
+
+            # 加载车牌识别模型
+            if not os.path.exists(self.REC_MODEL_PATH):
+                raise FileNotFoundError(f"未找到车牌识别模型文件: {self.REC_MODEL_PATH}")
+
             self.plate_rec_model = init_model(self.device, self.REC_MODEL_PATH, is_color=self.IS_COLOR)
-            print("模型加载完毕。")
+            print("所有模型加载完毕。")
 
         except Exception as e:
             # --- [配色修改] ---
@@ -464,11 +489,16 @@ class PlateRecognizerGUI(QWidget):
             # 首先对整张图片进行180度旋转
             cv_image = self.rotate_image_180(cv_image)
             
-            # 使用旋转后的图片进行识别
-            dict_list = detect_Recognition_plate(
-                self.detect_model, cv_image, self.device, 
+            # 使用多模型检测
+            dict_list, used_model_index = detect_Recognition_plate_multi_models(
+                self.detect_models, cv_image, self.device, 
                 self.plate_rec_model, self.IMG_SIZE, is_color=self.IS_COLOR
             )
+            
+            # 显示使用的模型信息
+            if used_model_index >= 0:
+                model_name = os.path.basename(self.detect_model_paths[used_model_index])
+                print(f"检测成功！使用的模型: {model_name}")
             
             if dict_list:
                 result = dict_list[0] 
@@ -591,7 +621,7 @@ if __name__ == "__main__":
     
     try:
         window = PlateRecognizerGUI()
-        if window.detect_model is None or window.plate_rec_model is None:
+        if not window.detect_models or window.plate_rec_model is None:
             print("模型未加载，程序退出。")
             sys.exit(1)
             
