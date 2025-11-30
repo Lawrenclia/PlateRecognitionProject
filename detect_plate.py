@@ -1,12 +1,9 @@
 # -*- coding: UTF-8 -*-
 import argparse
 import time
-from pathlib import Path
 import os
 import cv2
 import torch
-import torch.backends.cudnn as cudnn
-from numpy import random
 import copy
 import numpy as np
 from models.experimental import attempt_load
@@ -175,6 +172,38 @@ def detect_Recognition_plate(model, orgimg, device,plate_rec_model,img_size,is_c
     return dict_list
 
 
+def detect_Recognition_plate_multi_models(models, orgimg, device, plate_rec_model, img_size, is_color=False):
+    """
+    使用多个模型进行车牌检测，直到成功检测到车牌或所有模型都尝试完毕
+    models: 检测模型列表
+    orgimg: 原始图像
+    device: 设备
+    plate_rec_model: 车牌识别模型
+    img_size: 图像尺寸
+    is_color: 是否识别颜色
+    
+    返回: (检测结果列表, 使用的模型索引)
+    """
+    for i, model in enumerate(models):
+        try:
+            print(f"尝试使用模型 {i+1}/{len(models)} 进行检测...")
+            dict_list = detect_Recognition_plate(model, orgimg, device, plate_rec_model, img_size, is_color=is_color)
+            
+            if dict_list:
+                print(f"模型 {i+1} 成功检测到车牌")
+                return dict_list, i  # 返回检测结果和使用的模型索引
+            else:
+                print(f"模型 {i+1} 未检测到车牌")
+                
+        except Exception as e:
+            print(f"模型 {i+1} 检测时出错: {e}")
+            continue
+    
+    # 所有模型都未能检测到车牌
+    print("所有模型均未能检测到车牌")
+    return [], -1
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--detect_model', nargs='+', type=str, default='weights/plate_detect.pt', help='model.pt path(s)')  #检测模型
@@ -263,4 +292,3 @@ if __name__ == '__main__':
                 
                 time_e = time.time()
                 print(f"... 耗时: {time_e - time_b:.4f}s")
-                

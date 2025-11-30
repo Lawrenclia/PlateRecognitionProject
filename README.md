@@ -1,4 +1,4 @@
-# Project
+# ICE2607teamProject
 ## 1.一些链接
 - CCPD数据集github链接：
 > <a href = "https://github.com/detectRecog/CCPD?tab=readme-ov-file"> CCPD数据库 </a>
@@ -8,15 +8,7 @@
 
 
 
-- 类似的项目(现在用的就是第二个)
-
-  <a href = "https://github.com/wzh191920/License-Plate-Recognition"> 第一个 </a>
-
-  <a href = "https://github.com/we0091234/Chinese_license_plate_detection_recognition">  第二个 </a>
-
-  <a href = "https://github.com/DataXujing/vehicle-license-plate-recognition"> 第三个 </a>
-
-
+---
 
 
 
@@ -25,39 +17,64 @@
 <img src="images/page1.png" alt="Page 1 an" width="500">
 <img src="images/page2.png" alt="Page 2 an" width="500">
 
-
-## 3.如何运行
-
-1. 下载requirements.txt中的库
-2. 运行gui_app.py
-3. over
+---
 
 
 
-## 4.函数介绍
-### 数据处理相关
+## 3.文件结构（暂定）
+```
+PlateRecognition-Project/
+│
+├── .gitignore                 
+├── requirements.txt         # Python 依赖库, e.g., PySide6, torch, ultralytics
+├── main_app.py              # 主程序入口, 通过 `python main_app.py` 运行
+│
+├── models/                    # 训练生成的模型
+│   ├── detect.pt              # YOLOv8 检测模型
+│   └── recognize.pt           # LPRNet 识别模型
+│
+├── core/                    # 核心 AI 逻辑
+│   ├── __init__.py
+│   ├── detector.py          # 封装 YOLOv8 推理的代码
+│   ├── recognizer.py        # 封装 LPRNet 推理的代码
+│   ├── lprnet_model.py      # LPRNet 的 PyTorch 模型定义
+│   └── lprnet_utils.py      # LPRNet 的 CTC 解码器和字符表
+│
+├── gui/                     # PySide6 界面代码
+│   ├── __init__.py
+│   ├── main_window.py       # 定义 GUI 窗口、按钮和布局
+│   └── utils.py             # 包含 OpenCV/Numpy 转 QPixmap 的辅助函数
+│
+├── training_scripts/        # 数据预处理
+│   ├── prepare_ccpd_yolo.py
+│   └── prepare_ccpd_lprnet.py
+│
+├── 大作业报告.pdf     
+└── 讲解视频.mp4               
 
-- `prepare_ccpd_yolo.py`：将 CCPD 数据集转换为 YOLO 目标检测模型所需的格式（包含标注文件转换、数据集划分等），为检测模型训练做准备。
-- `prepare_ccpd_lprnet.py`：处理 CCPD 数据集并适配 LPRNet 网络输入格式（如裁剪车牌区域、生成字符标签等），自动将处理后的数据放入 LPRNet 库的指定路径，用于识别模型训练。
-- `ccpd_process.py`：包含`allFilePath`函数，递归遍历指定目录下所有`.jpg`文件并收集路径，用于批量加载 CCPD 数据集图片。
-- `json2yolo.py`：提供 JSON 标注格式转 YOLO 标注格式的工具函数（如`xywh2yolo`坐标转换、透视变换处理等），支持检测模型的标注文件预处理。
+```
 
-### 模型与训练相关
+---
 
-- `train_LPRNet.py`：LPRNet 车牌识别模型的训练脚本，定义训练流程（如加载数据集、迭代训练、保存模型等），输出识别模型权重文件（.pth）。
-- `utils/torch_utils.py`：包含`prune`函数，使用 PyTorch 剪枝工具对模型卷积层进行 L1 非结构化剪枝，用于模型压缩和轻量化优化。
-- `utils/activations.py`：实现 Mish 激活函数（继承自`nn.Module`），作为神经网络层组件，用于模型特征提取过程中的非线性变换。
-- `utils/datasets.py`：实现`cutout`数据增强方法，通过随机遮挡图片区域增强模型鲁棒性，同时过滤被遮挡的标注目标以保证训练精度。
-- `models/experimental.py`：定义实验性神经网络层或模型结构（如多输入特征融合逻辑），用于模型架构的调试和优化。
+## 4.steps
+**记得修改地址**
+执行训练任务 1 (检测模型)：
 
-### 工具与交互相关
+使用 `prepare_ccpd_yolo.py` 脚本处理下载的数据。
 
-- `gui_app.py`：图形用户界面（GUI）主程序，包含界面元素管理函数（如`clear`方法用于清理界面标签和布局），支持用户通过界面操作实现车牌检测与识别功能。
-- `utils/plots.py`：提供`color_list`函数，将 Matplotlib 默认颜色周期（十六进制）转换为 RGB 元组列表，用于可视化结果（如检测框、识别结果）的颜色配置。
-- `utils/general.py`：通用工具函数集合，包括日志设置、随机种子初始化、文件路径检查、坐标格式转换（如`xyxy2xywh`）、数据集验证等，为项目各模块提供基础支持。
-- `data/scripts/get_voc.sh`：Shell 脚本，用于下载和整理 VOC 数据集（按指定目录结构存放图片和标签，生成训练 / 验证集列表），若项目不使用 VOC 数据集可忽略。
+运行 `yolo task=detect mode=train model=yolov8n.pt data="D:\Files\openCV\datasets\CCPD_YOLO\data.yaml" epochs=50 imgsz=640 batch=16` 命令开始训练。
 
+将生成的 best.pt 重命名为 models/detect.pt。
 
+执行训练任务 2 (识别模型)：
+
+下载 LPRNet_Pytorch 库 (git clone ...)。
+
+使用`prepare_ccpd_lprnet.py` 脚本处理数据并自动放入 LPRNet 库。
+
+运行 python train_LPRNet.py 命令开始训练。
+
+将生成的 .pth 文件重命名为 models/recognize.pt。
 
 ## 5.AI写的废话
 ### 这一句不是废话：<font color = "red"> **建议用vscode**</font>
@@ -79,7 +96,7 @@
 
 | 工具 | 操作步骤 |
 | :--- | :--- |
-| **命令行 (CLI)** | `git clone https://github.com/Lawrenclia/PlateRecognitionProject` |
+| **命令行 (CLI)** | `git clone https://github.com/Lawrenclia/ICE2607teamProject` |
 | **VS Code** | 1. 打开“源代码管理” (Source Control) 面板。<br>2. 点击 **“克隆存储库”** (Clone Repository)。<br>3. 粘贴链接并选择本地文件夹。 |
 | **Visual Studio** | 1. 在启动窗口选择 **“克隆存储库”** (Clone a repository)。<br>2. 粘贴链接 (存储库位置) 并选择本地路径。 |
 
