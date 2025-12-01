@@ -206,7 +206,7 @@ def detect_Recognition_plate_multi_models(models, orgimg, device, plate_rec_mode
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--detect_model', nargs='+', type=str, default=['weights/norm1.pt', 'weights/norm2.pt', 'weights/green.pt','weights/hard.pt'], help='model.pt path(s)')  #检测模型
+    parser.add_argument('--detect_model', nargs='+', type=str, default=['weights/norm1.pt', 'weights/norm2.pt', 'weights/green.pt','weights/tilt.pt','weights/hard.pt'], help='model.pt path(s)')  #检测模型
     parser.add_argument('--rec_model', type=str, default='weights/plate_rec_color.pth', help='model.pt path(s)')#车牌识别+颜色识别模型
     parser.add_argument('--is_color',type=bool,default=True,help='plate color')      #是否识别颜色
     parser.add_argument('--image_path', type=str, default='imgs', help='source')     #图片路径
