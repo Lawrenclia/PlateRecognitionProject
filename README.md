@@ -7,56 +7,9 @@
 > 链接: https://pan.sjtu.edu.cn/web/share/a4afb22d5d891684a71c27c5dfd4a398, 提取码: lnx3
 
 
-
 ---
 
-
-
-## 2.大作业任务
-
-<img src="images/page1.png" alt="Page 1 an" width="500">
-<img src="images/page2.png" alt="Page 2 an" width="500">
-
----
-
-
-
-## 3.文件结构（暂定）
-```
-PlateRecognition-Project/
-│
-├── .gitignore                 
-├── requirements.txt         # Python 依赖库, e.g., PySide6, torch, ultralytics
-├── main_app.py              # 主程序入口, 通过 `python main_app.py` 运行
-│
-├── models/                    # 训练生成的模型
-│   ├── detect.pt              # YOLOv8 检测模型
-│   └── recognize.pt           # LPRNet 识别模型
-│
-├── core/                    # 核心 AI 逻辑
-│   ├── __init__.py
-│   ├── detector.py          # 封装 YOLOv8 推理的代码
-│   ├── recognizer.py        # 封装 LPRNet 推理的代码
-│   ├── lprnet_model.py      # LPRNet 的 PyTorch 模型定义
-│   └── lprnet_utils.py      # LPRNet 的 CTC 解码器和字符表
-│
-├── gui/                     # PySide6 界面代码
-│   ├── __init__.py
-│   ├── main_window.py       # 定义 GUI 窗口、按钮和布局
-│   └── utils.py             # 包含 OpenCV/Numpy 转 QPixmap 的辅助函数
-│
-├── training_scripts/        # 数据预处理
-│   ├── prepare_ccpd_yolo.py
-│   └── prepare_ccpd_lprnet.py
-│
-├── 大作业报告.pdf     
-└── 讲解视频.mp4               
-
-```
-
----
-
-## 4.steps
+## 2.steps
 **记得修改地址**
 执行训练任务 1 (检测模型)：
 
