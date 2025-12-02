@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # .gitignore
 # 首先忽略所有的文件
 *
@@ -10,15 +9,16 @@ runs/
 .vscode/
 build/
 result1/
-result/
-mytest/
-mytest_double/
-pretrained_model/
-gangao/
-extra/
-ccpd/
-*.pyc
+output/
+pretrainde_model/
+color_model_small/
+demoMy.py
+get_every_provice_number.py
+get_train_less_data.py
+redtest.py
 # 不忽略下面指定的文件类型
+color/
+identify/
 !*.cpp
 !*.h
 !*.hpp
@@ -28,33 +28,9 @@ ccpd/
 !*.sh
 !*.npy
 !*.jpg
-!*.pt
-!*.npy
 !*.pth
-!*.png
-!*.yaml
-!*.md
+!*.npy
 !*.txt
-=======
-# Python 缓存
-__pycache__/
-*.pyc
-venv/
-
-# IDE 配置
-.vscode/
-.idea/
-
-# AI 模型和数据
-models/
-*.weights
-*.onnx
-dataset/
-data/
-
-# 打包文件 (Source 10)
-dist/
-build/
-*.exe
-*.spec
->>>>>>> 1636af5e95da321410b7937cf92e6bf1dde5b3cf
+!*.md
+!*.yaml
+!*.png
