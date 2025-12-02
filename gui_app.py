@@ -309,6 +309,7 @@ class PlateRecognizerGUI(QWidget):
             resource_path(os.path.join('weights', 'tilt.pt')),
             resource_path(os.path.join('weights', 'hard.pt')),
             resource_path(os.path.join('weights', 'green.pt')),
+            resource_path(os.path.join('weights', 'plate_detect.pt')),
             # 可以添加更多备选模型
         ]
         
