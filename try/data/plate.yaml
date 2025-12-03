@@ -1,0 +1,12 @@
+# 数据集路径
+train: D:/OpenCV/try/datasets/images/train
+val: D:/OpenCV/try/datasets/images/val
+
+# 类别数
+nc: 1
+# 类别名称
+names: ['license_plate']
+
+# 关键点配置（四个角点）
+kpt_shape: [4, 2]  # 4个点，每个点有x,y两个坐标
+flip_idx: [1, 0, 3, 2]  # 水平翻转时关键点的对应关系
