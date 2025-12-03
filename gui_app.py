@@ -301,7 +301,6 @@ class PlateResultWidget(QFrame):
 class PlateRecognizerGUI(QWidget):
     def __init__(self):
         super().__init__()
-        
         # 定义多个备选模型路径
         self.detect_model_paths = [
             resource_path(os.path.join('weights', 'norm1.pt')),
